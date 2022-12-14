@@ -997,8 +997,10 @@ app.get('/login/google',
 
 app.get('/login/google/callback',
     passport.authenticate( 'google', {
-        successRedirect: 'http://localhost:4200/homepage',
-        failureRedirect: 'http://localhost:4200/homepage'
+        // successRedirect: 'http://localhost:4200/homepage',
+        // failureRedirect: 'http://localhost:4200/homepage'
+        successRedirect: 'http://localhost:5000/homepage',
+        failureRedirect: 'http://localhost:5000/homepage'
     }
     
 ));
