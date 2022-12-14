@@ -1000,8 +1000,8 @@ app.get('/login/google/callback',
     passport.authenticate( 'google', {
         // successRedirect: 'http://localhost:4200/homepage',
         // failureRedirect: 'http://localhost:4200/homepage'
-        successRedirect: `/`,
-        failureRedirect: `/`
+        successRedirect: `${aws}`,
+        failureRedirect: `${aws}`
     }
     
 ));
