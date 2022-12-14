@@ -39,6 +39,7 @@ const expressJWT = require('express-jwt')
 // const { expressjwt: jwt } = require("express-jwt");
 // var { expressjwt: jwt } = require("express-jwt");
 
+const aws = 'ec2-35-172-179-0.compute-1.amazonaws.com'
 
 const secretKey = 'IloveECE9065!!!'
 // decode jwt token
@@ -57,7 +58,14 @@ app.use(expressJWT({ secret: secretKey, algorithms: ['HS256'] }).unless({
         '/login/google/callback',
         '/homepage',
         '/users/check-session',
-        /^\/confirmation\/.*/
+        /^\/confirmation\/.*/,
+        '/favicon.ico',
+        '/index.html',
+        '/main.1e8584736d5041c7.js',
+        '/polyfills.02b818b9fa06d0dd.js',
+        '/runtime.c935be83c7676ba6.js',
+        '/styles.7b3bdc817598a7fa.css',
+        '/'
     ]
 }))
 
@@ -213,7 +221,12 @@ app.get("/users/logout", (req, res) => {
 });
 
 // update password of a user
-app.post("/password/update", (req, res) => {
+app.post("/password/update", [check('newpassword').isLength({ max: 50 }).trim().escape()], (req, res) => {
+    const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() })
+	}
+    
     log('new: ' + req.body.newpassword)
     const userid = req.body.userid.toString()
     const newpassword = req.body.newpassword.toString()
@@ -244,8 +257,13 @@ app.post("/password/update", (req, res) => {
 });
 
 // deactivate a user
-app.post("/admin/deactivate", (req, res) => {
+app.post("/admin/deactivate", [check('email').trim().escape(),
+                                check('status').trim().escape()], (req, res) => {
     log(req.body)
+    const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() })
+	}
     const userid = req.body.userid.toString()
     User.findById(userid)
         .then(user => {
@@ -283,7 +301,14 @@ app.post("/admin/deactivate", (req, res) => {
 
 // Grant admin privilege to a user
 // role 1 admin, 2 user
-app.post("/admin/user/upgrade", (req, res) => {
+app.post("/admin/user/upgrade", [check('role').trim().escape(),
+                                    check('email').trim().escape()], (req, res) => {
+
+    const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() })
+	}        
+
     const email = req.body.email.toString()
     const role = req.body.role.toString()
     const userid = req.body.userid.toString()
@@ -461,11 +486,12 @@ app.get('/playlists', (req, res) => {
 })
 
 // create a new playlist by a user
-app.post('/playlist', (req, res) => {
-	// const errors = validationResult(req)
-	// if (!errors.isEmpty()) {
-	// 	return res.status(400).json({ errors: errors.array() })
-	// }
+app.post('/playlist', [check('listname').isLength({ max: 50 }).trim().escape(),
+                        check('username').isLength({ max: 50 }).trim().escape()], (req, res) => {
+	const errors = validationResult(req)
+	if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() })
+	}
     let oldUserPlaylists = []
     User.findById(req.body.userid.toString())
         .then(user => {
@@ -722,7 +748,13 @@ app.post('/playlist/rating', (req, res) => {
 })
 
 // add a review to the playlist
-app.post('/playlist/review', (req, res) => {
+app.post('/playlist/review', [check('review').isLength({ max: 100 }).trim().escape(),
+                                check('username').isLength({ max: 50 }).trim().escape()], (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+
     const playlistid = req.body.playlistid.toString()
 
     const review = {
@@ -902,7 +934,8 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 passport.use(new GoogleStrategy({
     clientID:     '480225921509-djnrq95jfp6hm0vnvl198kmdeci87eil.apps.googleusercontent.com',
     clientSecret: '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',
-    callbackURL: "http://localhost:5000/login/google/callback",
+    // callbackURL: "http://localhost:5000/login/google/callback",
+    callbackURL: `http://${aws}:5000/login/google/callback`,
     passReqToCallback   : true
   },
   function(request, accessToken, refreshToken, profile, done) {
@@ -964,8 +997,9 @@ app.get('/login/google',
 
 app.get('/login/google/callback',
     passport.authenticate( 'google', {
-        successRedirect: 'http://localhost:4200/homepage',
-        failureRedirect: 'http://localhost:4200/homepage'
+        successRedirect: `http://${aws}:4200/homepage`,
+        failureRedirect: `http://${aws}:4200/homepage`
+        // failureRedirect: 'http://localhost:4200/homepage'
     }
     
 ));

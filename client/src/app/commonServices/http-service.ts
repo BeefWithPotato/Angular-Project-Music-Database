@@ -6,7 +6,8 @@ import { Injectable } from "@angular/core";
 export class HttpService {
     constructor() {}
 
-    host:string = 'http://localhost:5000'
+    // host:string = 'http://localhost:5000'
+    host:string = 'http://ec2-35-172-179-0.compute-1.amazonaws.com:5000'
     //get all genres
     getAllGenresService() {
         const url = this.host + "/genres";

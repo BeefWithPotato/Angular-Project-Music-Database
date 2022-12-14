@@ -69,12 +69,13 @@ export class UnauthenticatedUserComponent implements OnInit {
         this.sharedService.onRoleEvent.emit(json.user.role)
       })
       .catch(error => {
+        const user = JSON.parse(localStorage.getItem('currentUser') || '{}')
+        if (user.userName) {
+          this.sharedService.onLoginEvent.emit(user.userName);
+          this.sharedService.onRoleEvent.emit(user.role);
+        }
         console.log(error);
       })
-      
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}')
-    this.sharedService.onLoginEvent.emit(user.userName);
-    this.sharedService.onRoleEvent.emit(user.role);
   }
 
   searchTrack(inputvalue:any) {
