@@ -935,8 +935,8 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 passport.use(new GoogleStrategy({
     clientID:     '480225921509-djnrq95jfp6hm0vnvl198kmdeci87eil.apps.googleusercontent.com',
     clientSecret: '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',
-    callbackURL: `${aws}/login/google/callback`,
-    // callbackURL: `http://${aws}:5000/login/google/callback`,
+    // callbackURL: `${aws}/login/google/callback`,
+    callbackURL: `/login/google/callback`,
     passReqToCallback   : true
   },
   function(request, accessToken, refreshToken, profile, done) {
@@ -1000,8 +1000,8 @@ app.get('/login/google/callback',
     passport.authenticate( 'google', {
         // successRedirect: 'http://localhost:4200/homepage',
         // failureRedirect: 'http://localhost:4200/homepage'
-        successRedirect: `${aws}`,
-        failureRedirect: `${aws}`
+        successRedirect: `/`,
+        failureRedirect: `/`
     }
     
 ));
