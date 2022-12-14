@@ -44,7 +44,7 @@ const PlaylistSchema = new mongoose.Schema({
     reviews: {
         type: Array,
         required: false,
-        default: [Review]
+        default: [review]
     },
     rating: {
         type: Number,
