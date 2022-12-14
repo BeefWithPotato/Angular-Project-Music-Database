@@ -39,7 +39,7 @@ const expressJWT = require('express-jwt')
 // const { expressjwt: jwt } = require("express-jwt");
 // var { expressjwt: jwt } = require("express-jwt");
 
-const aws = 'http://ec2-35-172-179-0.compute-1.amazonaws.com:5000'
+const aws = 'http://ec2-54-196-160-43.compute-1.amazonaws.com:5000'
 
 const secretKey = 'IloveECE9065!!!'
 // decode jwt token
