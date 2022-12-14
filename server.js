@@ -61,11 +61,15 @@ app.use(expressJWT({ secret: secretKey, algorithms: ['HS256'] }).unless({
         /^\/confirmation\/.*/,
         '/favicon.ico',
         '/index.html',
-        '/main.ca24e9004bd03cec.js',
+        '/main*',
+        /^\/main.*/,
+        /^\/polyfills.*/,
+        /^\/runtime.*/,
+        /^\/styles.*/,
         '/polyfills.02b818b9fa06d0dd.js',
         '/runtime.c935be83c7676ba6.js',
         '/styles.7b3bdc817598a7fa.css',
-        '/'
+        '/',
     ]
 }))
 
