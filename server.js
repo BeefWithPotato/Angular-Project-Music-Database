@@ -39,7 +39,7 @@ const expressJWT = require('express-jwt')
 // const { expressjwt: jwt } = require("express-jwt");
 // var { expressjwt: jwt } = require("express-jwt");
 
-const aws = 'ec2-35-172-179-0.compute-1.amazonaws.com'
+const aws = 'http://ec2-35-172-179-0.compute-1.amazonaws.com:5000'
 
 const secretKey = 'IloveECE9065!!!'
 // decode jwt token
@@ -912,7 +912,8 @@ app.post("/admin/policy", (req, res) => {
 
 // google login
 //Import the main Passport and Express-Session library
-const passport = require('passport')
+const passport = require('passport');
+const { ADDRGETNETWORKPARAMS } = require('dns');
 //Import the secondary "Strategy" library
 app.use(session({
     secret: "secret",
@@ -934,7 +935,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 passport.use(new GoogleStrategy({
     clientID:     '480225921509-djnrq95jfp6hm0vnvl198kmdeci87eil.apps.googleusercontent.com',
     clientSecret: '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',
-    callbackURL: "http://localhost:5000/login/google/callback",
+    callbackURL: `${aws}/login/google/callback`,
     // callbackURL: `http://${aws}:5000/login/google/callback`,
     passReqToCallback   : true
   },
@@ -999,8 +1000,8 @@ app.get('/login/google/callback',
     passport.authenticate( 'google', {
         // successRedirect: 'http://localhost:4200/homepage',
         // failureRedirect: 'http://localhost:4200/homepage'
-        successRedirect: 'http://localhost:5000/homepage',
-        failureRedirect: 'http://localhost:5000/homepage'
+        successRedirect: `${aws}`,
+        failureRedirect: `${aws}`
     }
     
 ));
