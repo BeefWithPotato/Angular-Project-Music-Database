@@ -1,7 +1,7 @@
 /* Genre mongoose model */
 const mongoose = require('mongoose')
 
-const Review = require('./review')
+const review = require('./review')
 
 // Reviews will be embedded in the Playlist model
 const PlaylistSchema = new mongoose.Schema({
